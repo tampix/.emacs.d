@@ -1,0 +1,109 @@
+#+TITLE: Emacs configuration file
+#+AUTHOR: Nicolas Bertrand
+#+BABEL: :cache yes
+#+PROPERTY: header-args :tangle yes
+
+* About
+** Foreword
+
+   2018-10-12, I declare .emacs.d bankruptcy.
+
+   My current configuration used to rely on [[https://github.com/cask/cask][Cask]] and [[https://github.com/rdallasgray/pallet][Pallet]] but it
+   didn't work anymore after upgrading to Emacs 26. I lived with a
+   broken config for some months but it started becoming a real problem
+   once I had to go through some config overhaul to accomodate sudden
+   needs.
+
+   Another point of pain was how I handled my bindings, especially for
+   =evil= where I had some custom text-object and thus corresponding
+   motions. It's been almost a year that I want to try out [[https://github.com/noctuid/general.el][general]]
+   alongside [[https://github.com/justbur/emacs-which-key][which-key]] to have a nice experience ala =magit=,
+   =Spacemacs=, =Doom=... etc.
+
+   So, why not use =Spacemacs= or =Doom= directly? Well first, this is
+   the occasion for me to learn more of =org-mode= (which I only
+   scratched the surface of) and improves my =emacs-lisp=.
+
+   After seeing so many people using org-mode to write their
+   configuration with great success, why not do it myself?
+
+   Anyway, I hope this attempt at a clean config won't end in
+   bankruptcy this time...
+
+** Aim
+
+   * Keep it fast (at first, aim for less than 0.5s at startup)
+   * Don't let it rot
+   * Have a little bit of documentation so that I understand some of
+     my choices afterwards
+
+** License
+
+   This configuration is licensed under the MIT license. See provided [[https://github.com/tampix/.emacs.d/blob/master/LICENSE][LICENSE]].
+
+* Bootstrapping
+
+  First, let's ensure generated =init.el= has proper scoping and
+  encoding.
+
+  #+BEGIN_SRC emacs-lisp
+     ;;; -*- lexical-binding: t -*-
+     ;;; -*- coding: utf-8 -*-
+  #+END_SRC
+
+  Original =init.el= defines the way to reload the configuration.
+
+  #+BEGIN_SRC emacs-lisp
+    (defun tangle-init-org-file ()
+      "Reload and byte-compile init file from the main org file."
+      (interactive)
+      (let ((default-directory user-emacs-directory))
+        (require 'org)
+        ;; tangle `README.org' and byte-compile the generated .el file
+        (org-babel-tangle-file "README.org")
+        (byte-compile-file "README.el" t)
+        ;; set byte-compiled file as init file
+        (rename-file "README.elc" "init.elc" t)
+        ;; keep a backup of generated init file for debugging purposes
+        (rename-file "README.el" ".init.el.bak" t)))
+  #+END_SRC
+
+  It should only be run once, at the first startup, as the real config
+  will get generated, byte-compiled and then backed up as
+  =init.el.bak= if something really goes awry.
+
+  #+BEGIN_SRC emacs-lisp :tangle no
+    (tangle-init-org-file)
+  #+END_SRC
+
+  To ensure modifications in this file update the configuration,
+  let's add the =tangle-init-org-file= function to the
+  =after-save-hook= so that changes apply immediatly.
+
+  #+BEGIN_SRC emacs-lisp
+    (defun maybe-tangle-init-org-file ()
+      (when (and (derived-mode-p 'org-mode)
+                 (equal (buffer-file-name)
+                        (concat user-emacs-directory "README.org")))
+        ;; XXX suppress hooks while tangling
+        (let ((prog-mode-hook nil))
+          (tangle-init-org-file))))
+
+    (add-hook 'after-save-hook #'maybe-tangle-init-org-file)
+  #+END_SRC
+
+** TODO I can't make that work in README.org in GitHub...
+   #+BEGIN_SRC org :tangle no
+     ,#+INCLUDE: "./init.el" src emacs-lisp
+   #+END_SRC
+
+* Configuration
+
+* Work in progress
+
+  This is for testing or things that aren't fleshed out still.
+
+  #+BEGIN_SRC emacs-lisp
+    (setq inhibit-startup-screen t
+          initial-scratch-message ";; It Works!\n\n")
+  #+END_SRC
