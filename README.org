@@ -128,6 +128,21 @@
      (fix-elisp-indent 'defalias 1)
    #+END_SRC
 
+** Garbage collector
+
+   Configure GC so it doesn't run during the init.
+
+   #+BEGIN_SRC emacs-lisp
+    (let ((default-threshold gc-cons-threshold)
+          (default-percentage gc-cons-percentage))
+      (setq gc-cons-threshold (* 100 default-threshold)
+            gc-cons-percentage 0.75)
+      (cl-flet ((reset-gc-config ()
+                  (setq gc-cons-threshold default-threshold
+                        gc-cons-percentage default-percentage)))
+        (add-hook 'after-init-hook #'reset-gc-config)))
+   #+END_SRC
+
 * Work in progress
 
   This is for testing or things that aren't fleshed out still.
