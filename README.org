@@ -99,6 +99,35 @@
 
 * Configuration
 
+** Emacs lisp indendation and cl-lib
+
+   Import =cl-lib= at compile time.
+
+   #+BEGIN_SRC emacs-lisp
+    (eval-when-compile
+      (require 'cl-lib))
+   #+END_SRC
+
+   Because the indentation of =cl-flet= and such is still broken as of
+   [2018-10-14 Sun], fix their indentation.
+
+   #+BEGIN_SRC emacs-lisp
+     ;; TODO move once use-package is setup
+     (require 'cl-indent)
+
+     (setq lisp-indent-function 'common-lisp-indent-function)
+
+     (defun fix-elisp-indent (func indent)
+       "Fix the indendation of elisp froms that
+     `common-lisp-indent-function' might have broken."
+       (unless (and (symbolp func)
+                    (fboundp func))
+         (error "%s: is not a function" func))
+       (put func 'common-lisp-indent-function-for-elisp indent))
+
+     (fix-elisp-indent 'defalias 1)
+   #+END_SRC
+
 * Work in progress
 
   This is for testing or things that aren't fleshed out still.
