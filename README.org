@@ -204,14 +204,15 @@
        :commands common-lisp-indent-function
        :config
        (defun fix-elisp-indent (func indent)
-         "Fix the indendation of elisp froms that
+         "Fix the indendation of elisp forms that
      `common-lisp-indent-function' might have broken."
          (unless (and (symbolp func)
                       (fboundp func))
            (error "%s: is not a function" func))
          (put func 'common-lisp-indent-function-for-elisp indent))
 
-       (fix-elisp-indent 'defalias 1))
+       (fix-elisp-indent 'defalias 1)
+       (fix-elisp-indent 'use-package 1))
    #+END_SRC
 
 * Work in progress
