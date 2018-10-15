@@ -117,7 +117,7 @@
    #+BEGIN_SRC emacs-lisp
     (let ((default-threshold gc-cons-threshold)
           (default-percentage gc-cons-percentage))
-      (setq gc-cons-threshold (* 100 default-threshold)
+      (setq gc-cons-threshold (* 1000 default-threshold)
             gc-cons-percentage 0.75)
       (cl-flet ((reset-gc-config ()
                   (setq gc-cons-threshold default-threshold
