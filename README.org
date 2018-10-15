@@ -15,14 +15,14 @@
    needs.
 
    Another point of pain was how I handled my bindings, especially for
-   =evil= where I had some custom text-object and thus corresponding
+   *Evil* where I had some custom text-object and thus corresponding
    motions. It's been almost a year that I want to try out [[https://github.com/noctuid/general.el][general]]
-   alongside [[https://github.com/justbur/emacs-which-key][which-key]] to have a nice experience ala =magit=,
-   =Spacemacs=, =Doom=... etc.
+   alongside [[https://github.com/justbur/emacs-which-key][which-key]] to have a nice experience ala *Magit*,
+   *Spacemacs*, *Doom*... etc.
 
-   So, why not use =Spacemacs= or =Doom= directly? Well first, this is
-   the occasion for me to learn more of =org-mode= (which I only
-   scratched the surface of) and improves my =emacs-lisp=.
+   So, why not use *Spacemacs* or *Doom* directly? Well first, this is
+   the occasion for me to learn more of *org-mode* (which I only
+   scratched the surface of) and improves my *emacs-lisp*.
 
    After seeing so many people using org-mode to write their
    configuration with great success, why not do it myself?
@@ -148,7 +148,7 @@
 ** Setup package.el and use-package
 
    For now, initialize package.el normally. It might be interesting in
-   the future to consider doing what =Doom= or [[https://github.com/nilcons/emacs-use-package-fast/blob/master/errge-dot-emacs.el][emacs-use-package-fast]]
+   the future to consider doing what *Doom* or [[https://github.com/nilcons/emacs-use-package-fast/blob/master/errge-dot-emacs.el][emacs-use-package-fast]]
    implements and avoid the call to =package-initialize=.
 
    #+BEGIN_SRC emacs-lisp
@@ -169,6 +169,37 @@
      (setq use-package-always-ensure t)
 
      (require 'use-package)
+   #+END_SRC
+
+** Setup Evil
+
+   I've been a Vim enthusiast for about 10 years before I switched to
+   Emacs back in 2013. I discovered Evil in 2012 and tried it out, but
+   I wasn't ready to make the switch back then, even if I found the
+   experience pretty impressive (especially since, at the time, Evil
+   was very young).
+
+   I was using [[https://github.com/ctrlpvim/ctrlp.vim][ctrlp.vim]] and [[https://github.com/tpope/vim-fugitive][fugitive.vim]] then, and was happy about
+   it, but i knew that *Magit* was a level above *Fugitive* (I tried
+   it out too). What really got me interested in Emacs was that I
+   started using more and more of [[https://github.com/Shougo][Shougo]]'s Vim plugins, and one of
+   them was [[https://github.com/Shougo/unite.vim][unite.vim]], which seemed brilliant to me. The deeper I got
+   into using Unite and the more I got interested into Emacs as it was
+   an *anything.el* clone (which became known as *helm* along the
+   way).
+
+   Anyway, import *Evil* and setup a very basic configuration for now.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package evil
+       :commands evil-mode
+       :init
+       (setq evil-want-C-u-scroll t
+             evil-want-C-i-jump t
+             evil-want-C-w-in-emacs-state t
+             evil-search-module 'evil-search
+             evil-default-cursor t)
+       (add-hook 'after-init-hook 'evil-mode t))
    #+END_SRC
 
 * Work in progress
