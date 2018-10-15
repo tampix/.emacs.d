@@ -84,12 +84,16 @@
 
   #+BEGIN_SRC emacs-lisp
     (defun maybe-tangle-init-org-file ()
-      (when (and (derived-mode-p 'org-mode)
-                 (equal (buffer-file-name)
-                        (concat user-emacs-directory "README.org")))
-        ;; XXX suppress hooks while tangling
-        (let ((prog-mode-hook nil))
-          (tangle-init-org-file))))
+      (let ((cur-name (buffer-file-name))
+	    (init-name (concat user-emacs-directory "README.org")))
+	(when
+	    (and (derived-mode-p 'org-mode)
+		 (equal (file-truename cur-name)
+			(file-truename init-name)))
+	  ;; XXX suppress hooks while tangling
+	  (message "Should work...")
+	  (let ((prog-mode-hook nil))
+	    (tangle-init-org-file)))))
 
     (add-hook 'after-save-hook #'maybe-tangle-init-org-file)
   #+END_SRC
