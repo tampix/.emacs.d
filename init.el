@@ -3,8 +3,10 @@
   (interactive)
   (let ((default-directory user-emacs-directory))
     (require 'org)
-    ;; tangle `README.org' and byte-compile the generated .el file
+    ;; tangle `README.org'
     (org-babel-tangle-file "README.org")
+    ;; load the tangled file to ensure compilation works properly
+    (load-file "README.el")
     (byte-compile-file "README.el" t)
     ;; set byte-compiled file as init file
     (rename-file "README.elc" "init.elc" t)

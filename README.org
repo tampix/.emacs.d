@@ -59,8 +59,10 @@
       (interactive)
       (let ((default-directory user-emacs-directory))
         (require 'org)
-        ;; tangle `README.org' and byte-compile the generated .el file
+        ;; tangle `README.org'
         (org-babel-tangle-file "README.org")
+        ;; load the tangled file to ensure compilation works properly
+        (load-file "README.el")
         (byte-compile-file "README.el" t)
         ;; set byte-compiled file as init file
         (rename-file "README.elc" "init.elc" t)
@@ -141,6 +143,32 @@
                   (setq gc-cons-threshold default-threshold
                         gc-cons-percentage default-percentage)))
         (add-hook 'after-init-hook #'reset-gc-config)))
+   #+END_SRC
+
+** Setup package.el and use-package
+
+   For now, initialize package.el normally. It might be interesting in
+   the future to consider doing what =Doom= or [[https://github.com/nilcons/emacs-use-package-fast/blob/master/errge-dot-emacs.el][emacs-use-package-fast]]
+   implements and avoid the call to =package-initialize=.
+
+   #+BEGIN_SRC emacs-lisp
+     ;; Avoid init.el pollution...
+     (setq package--init-file-ensured t)
+
+     (require 'package)
+
+     (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+     (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
+     (package-initialize)
+
+     (unless (package-installed-p 'use-package)
+       (package-refresh-contents)
+       (package-install 'use-package))
+
+     (setq use-package-always-ensure t)
+
+     (require 'use-package)
    #+END_SRC
 
 * Work in progress
