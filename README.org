@@ -182,7 +182,7 @@
              evil-want-C-w-in-emacs-state t
              evil-search-module 'evil-search
              evil-default-cursor t)
-       (add-hook 'after-init-hook 'evil-mode t))
+       :hook (after-init . evil-mode))
    #+END_SRC
 
 ** Elisp configuration
