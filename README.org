@@ -1,3 +1,5 @@
+# -*- eval: (tangle-init-org-file-after-save); -*-
+
 #+TITLE: Emacs configuration file
 #+AUTHOR: Nicolas Bertrand
 #+BABEL: :cache yes
@@ -57,17 +59,22 @@
     (defun tangle-init-org-file ()
       "Reload and byte-compile init file from the main org file."
       (interactive)
-      (let ((default-directory user-emacs-directory))
-	(require 'org)
-	;; tangle `README.org'
-	(org-babel-tangle-file "README.org")
-	;; load the tangled file to ensure compilation works properly
-	(load-file "README.el")
-	(byte-compile-file "README.el" t)
-	;; set byte-compiled file as init file
-	(rename-file "README.elc" "init.elc" t)
-	;; keep a backup of generated init file for debugging purposes
-	(rename-file "README.el" ".init.el.bak" t)))
+      (require 'ob-tangle)
+      ;; For some reason, I can't make `org-babel-load-file' create the
+      ;; .elc file during the first init, sor for now, stick to manual
+      ;; tangle -> compile -> load.
+      (let* ((org-file (expand-file-name "README.org" user-emacs-directory))
+             (init-file (expand-file-name "init" user-emacs-directory))
+             (el-file (car (org-babel-tangle-file org-file nil "emacs-lisp"))))
+        (rename-file el-file init-file t)
+        ;; When first loading the config, load the tangled file anyway to
+        ;; ensure that packages are setup.
+        (when (bound-and-true-p tangle-init-org-file--first-time)
+          (load-file init-file))
+        (byte-compile-file init-file t)
+        (if debug-on-error
+            (rename-file init-file (concat init-file ".el.bak") t)
+          (delete-file init-file))))
   #+END_SRC
 
   It should only be run once, at the first startup, as the real config
@@ -75,26 +82,19 @@
   =init.el.bak= if something really goes awry.
 
   #+BEGIN_SRC emacs-lisp :tangle no
+    (setq-local tangle-init-org-file--first-time t)
     (tangle-init-org-file)
   #+END_SRC
 
   To ensure modifications in this file update the configuration,
-  let's add the =tangle-init-org-file= function to the
-  =after-save-hook= so that changes apply immediatly.
+  =tangle-init-org-file= is added to the =after-save-hook= as a local
+  variable of this file so that changes apply immediatly.
 
   #+BEGIN_SRC emacs-lisp
-    (defun maybe-tangle-init-org-file ()
-      (let ((cur-name (buffer-file-name))
-            (init-name (concat user-emacs-directory "README.org")))
-        (when
-            (and (derived-mode-p 'org-mode)
-                 (equal (file-truename cur-name)
-                        (file-truename init-name)))
-          ;; XXX suppress hooks while tangling
-          (let ((prog-mode-hook nil))
-            (tangle-init-org-file)))))
-
-    (add-hook 'after-save-hook #'maybe-tangle-init-org-file)
+    (defun tangle-init-org-file-after-save ()
+      (add-hook 'after-save-hook #'tangle-init-org-file nil t))
+    ;; It's a bit ugly but it does the job
+    (setq safe-local-variable-values '((eval tangle-init-org-file-after-save)))
   #+END_SRC
 
 ** TODO I can't make that work in README.org in GitHub...
@@ -139,11 +139,10 @@
      (setq package--init-file-ensured t)
 
      (require 'package)
+     (package-initialize)
 
      (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
      (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-
-     (package-initialize)
 
      (unless (package-installed-p 'use-package)
        (package-refresh-contents)
