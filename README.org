@@ -213,6 +213,16 @@
        (fix-elisp-indent 'use-package 1))
    #+END_SRC
 
+** hide-mode-line
+
+   A package from *Doom*, which helps hiding modeline when it isn't
+   pertinent.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package hide-mode-line
+       :commands hide-mode-line-mode)
+   #+END_SRC
+
 ** Magit
 
    *Magit* was what, along with *Evil*, sold me Emacs at first. I
@@ -235,7 +245,9 @@
        ;; Ensure `magit-status' is fullframe. Previous window configuration
        ;; is restored by default.
        (setq magit-display-buffer-function
-             #'magit-display-buffer-fullframe-status-v1))
+             #'magit-display-buffer-fullframe-status-v1)
+       (add-hook 'magit-mode-hook #'hide-mode-line-mode)
+       (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode))
    #+END_SRC
 
 *** TODO Add magit-blame and git-timemachine
