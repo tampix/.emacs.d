@@ -213,6 +213,33 @@
        (fix-elisp-indent 'use-package 1))
    #+END_SRC
 
+** Magit
+
+   *Magit* was what, along with *Evil*, sold me Emacs at first. I
+   tried it out back in 2012 and even then, I was amazed by it's ease
+   of use and power (mind that I was using *Fugitive* at the time,
+   which was powerful in it's own right).
+
+   It's become even more awesome as time went by, and really thank
+   it's contributors (and especially [[https://github.com/tarsius][tarsius]] who deserves all the
+   praise he got, without any shadow of a doubt, for what is the best
+   *Git* porcelain out there.
+
+   Surprisingly, I don't have much configuration going on for
+   it... Guess that means the defaults are sane and well thought of.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package magit
+       :commands magit-status
+       :config
+       ;; Ensure `magit-status' is fullframe. Previous window configuration
+       ;; is restored by default.
+       (setq magit-display-buffer-function
+             #'magit-display-buffer-fullframe-status-v1))
+   #+END_SRC
+
+*** TODO Add magit-blame and git-timemachine
+
 * Work in progress
 
   This is for testing or things that aren't fleshed out still.
