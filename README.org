@@ -250,7 +250,15 @@
        (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode))
    #+END_SRC
 
-*** TODO Add magit-blame and git-timemachine
+** git-timemachine
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package git-timemachine
+       :commands (git-timemachine
+                  git-timemachine-toggle))
+   #+END_SRC
+
+*** TODO fix binding conflicts with evil
 
 * Work in progress
 
