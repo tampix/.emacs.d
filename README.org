@@ -371,3 +371,26 @@
    #+END_SRC
 
 *** TODO fix binding conflicts with evil
+
+** Helm
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm
+       :commands helm-mode
+       :init
+       (setq helm-split-window-inside-p t
+	     helm-move-to-line-cycle-in-source t
+	     helm-ff-search-library-in-sexp t
+	     helm-ff-file-name-history-use-recentf t
+	     helm-M-x-requires-pattern nil)
+       :config
+       :hook (after-init . helm-mode))
+   #+END_SRC
+
+** helm-ag
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm-ag
+       :after (helm))
+   #+END_SRC
+
