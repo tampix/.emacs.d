@@ -61,7 +61,7 @@
       (interactive)
       (require 'ob-tangle)
       ;; For some reason, I can't make `org-babel-load-file' create the
-      ;; .elc file during the first init, sor for now, stick to manual
+      ;; .elc file during the first init, so for now, stick to manual
       ;; tangle -> compile -> load.
       (let* ((org-file (expand-file-name "README.org" user-emacs-directory))
              (init-file (expand-file-name "init" user-emacs-directory))
