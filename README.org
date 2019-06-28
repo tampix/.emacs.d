@@ -182,6 +182,14 @@
      (setq vc-handled-backends nil)
    #+END_SRC
 
+** TODO Stuff I should move to different files
+
+   #+BEGIN_SRC emacs-lisp
+     (defun disable-tabs ()
+       "Disable tabs for indentation."
+       (setq indent-tabs-mode nil))
+   #+END_SRC
+
 ** Setup package.el and use-package
 
    For now, initialize package.el normally. It might be interesting in
@@ -284,20 +292,22 @@
        :ensure nil
        :commands emacs-lisp-mode
        :config
-       (setq indent-tabs-mode nil)
-       (setq lisp-indent-function 'common-lisp-indent-function))
+       (setq lisp-indent-function 'common-lisp-indent-function)
+
+       (add-hook 'lisp-mode-hook #'disable-tabs)
+       (add-hook 'emacs-lisp-mode-hook #'disable-tabs))
 
      (use-package cl-indent
        :ensure nil
        :commands common-lisp-indent-function
        :config
        (defun fix-elisp-indent (func indent)
-         "Fix the indendation of elisp forms that
+	 "Fix the indendation of elisp forms that
      `common-lisp-indent-function' might have broken."
-         (unless (and (symbolp func)
-                      (fboundp func))
-           (error "%s: is not a function" func))
-         (put func 'common-lisp-indent-function-for-elisp indent))
+	 (unless (and (symbolp func)
+		      (fboundp func))
+	   (error "%s: is not a function" func))
+	 (put func 'common-lisp-indent-function-for-elisp indent))
 
        (fix-elisp-indent 'defalias 1)
        (fix-elisp-indent 'use-package 1))
