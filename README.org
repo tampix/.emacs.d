@@ -176,6 +176,12 @@
      (fset #'yes-or-no-p #'y-or-n-p)
    #+END_SRC
 
+   Disable VC as i use Git through Magit exclusively.
+
+   #+BEGIN_SRC emacs-lisp
+     (setq vc-handled-backends nil)
+   #+END_SRC
+
 ** Setup package.el and use-package
 
    For now, initialize package.el normally. It might be interesting in
@@ -329,9 +335,31 @@
        ;; Ensure `magit-status' is fullframe. Previous window configuration
        ;; is restored by default.
        (setq magit-display-buffer-function
-             #'magit-display-buffer-fullframe-status-v1)
+	     #'magit-display-buffer-fullframe-status-v1)
        (add-hook 'magit-mode-hook #'hide-mode-line-mode)
-       (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode))
+       (add-hook 'magit-popup-mode-hook #'hide-mode-line-mode)
+       (add-hook 'with-editor-mode-hook #'evil-insert-state))
+   #+END_SRC
+
+** Forge
+
+   *Forge* is a new package so config is going to be minimal.
+   Mostly used for *github-review*.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package forge
+       :after (magit))
+   #+END_SRC
+
+** github-review
+
+   Do GitHub Pull Request reviews from Emacs.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package github-review
+       :after forge
+       :commands (github-review-start
+                  github-review-forge-pr-at-point))
    #+END_SRC
 
 ** git-timemachine
