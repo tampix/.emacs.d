@@ -243,6 +243,31 @@
              which-key-idle-delay 0.1))
    #+END_SRC
 
+** general
+
+   Setup general with Vim like functions and some equivalents with a
+   default global prefix.
+
+   As SPC is already bound to *evil-forward-char* in the motion state,
+   unbind it beforehand so it can be used as a global prefix.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package general
+       :config
+       (general-evil-setup t)
+
+       (defconst my--prefix "SPC")
+       (general-def
+         :prefix my--prefix
+         :states '(motion normal visual)
+         ""
+         '(nil :which-key "Main prefix"))
+       (general-create-definer prefix-mmap :prefix my--prefix :states 'motion)
+       (general-create-definer prefix-nmap :prefix my--prefix :states 'normal)
+       (general-create-definer prefix-vmap :prefix my--prefix :states 'visual)
+       (general-create-definer prefix-nvmap :prefix my--prefix :states '(normal visual)))
+   #+END_SRC
+
 ** Elisp configuration
 
    Because the indentation of =cl-flet= and such is still broken as of
