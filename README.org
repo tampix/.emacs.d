@@ -394,3 +394,32 @@
        :after (helm))
    #+END_SRC
 
+** Projectile
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package projectile
+       :diminish (projectile-mode)
+       :commands (projectile-mode
+                  projectile-find-file
+                  projectile-switch-project
+                  projectile-switch-to-buffer)
+       :general
+       (prefix-nmap
+           "p" '(:keymap projectile-command-map :which-key "Projectile"))
+       :config
+       (projectile-mode t)
+       (recentf-mode t)
+       (setq projectile-enable-caching t
+             projectile-sort-order 'recentf
+             projectile-completion-system 'helm
+             projectile-switch-project-action 'projectile-vc))
+   #+END_SRC
+
+** helm-projectile
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm-projectile
+       :after (helm projectile)
+       :config
+       (helm-projectile-on))
+   #+END_SRC
