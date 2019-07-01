@@ -272,14 +272,34 @@
 
        (defconst my--prefix "SPC")
        (general-def
-         :prefix my--prefix
-         :states '(motion normal visual)
-         ""
-         '(nil :which-key "Main prefix"))
-       (general-create-definer prefix-mmap :prefix my--prefix :states 'motion)
-       (general-create-definer prefix-nmap :prefix my--prefix :states 'normal)
-       (general-create-definer prefix-vmap :prefix my--prefix :states 'visual)
-       (general-create-definer prefix-nvmap :prefix my--prefix :states '(normal visual)))
+	 :prefix my--prefix
+	 :states '(motion normal visual)
+	 ""
+	 '(nil :which-key "Main prefix"))
+       (general-create-definer prefix-map
+	   :prefix my--prefix
+	   :prefix-command 'my--prefix-command
+	   :prefix-map 'my--prefix-map)
+       (general-create-definer prefix-mmap
+	   :prefix my--prefix
+	   :prefix-command 'my--prefix-command
+	   :prefix-map 'my--prefix-map
+	   :states 'motion)
+       (general-create-definer prefix-nmap
+	   :prefix my--prefix
+	   :prefix-command 'my--prefix-command
+	   :prefix-map 'my--prefix-map
+	   :states 'normal)
+       (general-create-definer prefix-vmap
+	   :prefix my--prefix
+	   :prefix-command 'my--prefix-command
+	   :prefix-map 'my--prefix-map
+	   :states 'visual)
+       (general-create-definer prefix-nvmap
+	   :prefix my--prefix
+	   :prefix-command 'my--prefix-command
+	   :prefix-map 'my--prefix-map
+	   :states '(normal visual)))
    #+END_SRC
 
 ** Elisp configuration
@@ -341,6 +361,9 @@
    #+BEGIN_SRC emacs-lisp
      (use-package magit
        :commands magit-status
+       :general
+       (:keymaps 'magit-status-mode-map my--prefix nil)
+       (prefix-map :keymaps 'magit-status-mode-map "SPC" 'magit-diff-show-or-scroll-up)
        :config
        ;; Ensure `magit-status' is fullframe. Previous window configuration
        ;; is restored by default.
