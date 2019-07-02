@@ -215,6 +215,23 @@
      (require 'use-package)
    #+END_SRC
 
+** esup
+
+   Esup is a great package for profiling the init.
+   Setup Esup to profile the byte-compiled version of the init.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package esup
+       :init
+       (defun esup-tangled ()
+	 "Profile ~/.emacs.d/init.elc.
+     See `esup'"
+	 (interactive)
+	 (let ((debug-on-error t))
+	   (tangle-init-org-file))
+	 (esup (expand-file-name "init.el.bak" user-emacs-directory))))
+   #+END_SRC
+
 ** Setup Evil
 
    I've been a Vim enthusiast for about 10 years before I switched to
