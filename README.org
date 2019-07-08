@@ -281,6 +281,21 @@
 	 (esup (expand-file-name "init.el.bak" user-emacs-directory))))
    #+END_SRC
 
+** doom-theme
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package doom-themes
+       :config
+       (load-theme 'doom-dracula :no-confirm))
+   #+END_SRC
+
+** doom-modeline
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package doom-modeline
+       :hook (after-init . doom-modeline-mode))
+   #+END_SRC
+
 ** Setup Evil
 
    I've been a Vim enthusiast for about 10 years before I switched to
