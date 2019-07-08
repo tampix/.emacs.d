@@ -281,17 +281,49 @@
 	 (esup (expand-file-name "init.el.bak" user-emacs-directory))))
    #+END_SRC
 
-** doom-theme
+** Theme and modeline
+
+   Some themes have trouble when Emacs was run as a daemon. Create a
+   one-time hook called *after-first-make-frame-hook* that is ran only
+   once during the *after-make-frame-functions* hook.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package doom-themes
-       :config
-       (load-theme 'doom-dracula :no-confirm))
+     (defvar after-first-make-frame-hook nil
+       "Functions to run after the first frame is created.
+     If Emacs was started as a daemon, uses `after-make-frame-functions',
+     else uses `after-init-hook'.")
+
+     (defun run-after-first-make-frame-hooks ()
+       "Run hooks in `after-first-make-frame-hook'."
+       (if (daemonp)
+	   (cl-flet ((my--run-once (&optional frame)
+		       (with-selected-frame (or frame (selected-frame))
+			 (run-hooks 'after-first-make-frame-hook))
+		       (remove-hook 'after-make-frame-functions #'my--run-once)))
+	     (add-hook 'after-make-frame-functions #'my--run-once))
+	 ;; not a daemon, run hooks in the `after-init-hook'
+	 (run-hooks 'after-first-make-frame-hook)))
+
+     (add-hook 'after-init-hook #'run-after-first-make-frame-hooks)
    #+END_SRC
 
-** doom-modeline
+   Setup theme and modeline and related packages.
 
    #+BEGIN_SRC emacs-lisp
+     (use-package solaire-mode
+       :config
+       (solaire-global-mode +1)
+       :hook
+       ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+       (minibuffer-setup . solaire-mode-in-minibuffer))
+
+     (use-package doom-themes
+       :init
+       (defun load-doom-dracula ()
+	 (load-theme 'doom-dracula :no-confirm)
+	 (solaire-mode-swap-bg))
+       :hook (after-first-make-frame . load-doom-dracula))
+
      (use-package doom-modeline
        :hook (after-init . doom-modeline-mode))
    #+END_SRC
