@@ -594,3 +594,98 @@
      (use-package yasnippet-snippets
        :hook (yasnipppet . yasnippet-snippets-initialize))
    #+END_SRC
+
+** company
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company
+       :general
+       (imap "C-SPC" 'company-complete)
+       (general-def :keymaps 'company-active-map
+	 "C-n" 'company-select-next
+	 "C-p" 'company-select-previous)
+       :config
+       (setq company-tooltip-align-annotations t
+	     company-show-numbers t)
+       :hook (after-init . global-company-mode))
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company-quickhelp
+       :hook (company-mode . company-quickhelp-local-mode))
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package all-the-icons
+       :config
+       (defun my--all-the-icons-setup ()
+	 (if (window-system)
+	     (when (not (member "all-the-icons" (font-family-list)))
+	       (all-the-icons-install-fonts t))))
+       :hook (before-make-frame . my--all-the-icons-setup))
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company-box
+       :after (all-the-icons company)
+       :config
+       (setq company-box-icons-alist 'company-box-icons-all-the-icons)
+       :hook (company-mode . company-box-mode))
+   #+END_SRC
+
+** lsp
+
+   Setup *lsp-mode* and *company-lsp*. Don't setup *lsp-ui* for now as
+   it's very cumbersome (disable sideline, doc, company-quickhelp
+   override...)
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package lsp-mode
+       :commands lsp
+       :general
+       (prefix-nmap
+	   "l" '(:prefix-command my--lsp-command :prefix-map my--lsp-map :which-key "LSP"))
+       (general-def :keymaps 'my--lsp-map
+	 "" '(nil :which-key "LSP")
+	 "f" '(:prefix-command my--lsp-find-command :prefix-map my--lsp-find-map :which-key "Find")
+	 "e" '(lsp-execute-code-action :which-key "Execute code action")
+	 "=" '(lsp-format-dwim :which-key "Format dwim")
+	 "h" '(lsp-document-highlight :which-key "Highlight symbol")
+	 "r" '(lsp-rename :which-key "Rename symbol under point")
+	 "?" '(lsp-describe-thing-at-point :which-key "Describe thing at point"))
+       (general-def :keymaps 'my--lsp-find-map
+	 "" '(nil :which-key "LSP Find")
+	 "d" '(lsp-find-definition :which-key "Definition")
+	 "D" '(lsp-find-declaration :which-key "Declaration")
+	 "i" '(lsp-find-implementation :which-key "Implementation")
+	 "t" '(lsp-find-type-definition :which-key "Type definition")
+	 "r" '(lsp-find-references :which-key "References"))
+       :init
+       (defun lsp-format-dwim ()
+	 "Format using `lsp-format-region' is `region-active-p', or
+     else use `lsp-format-buffer'."
+	 (interactive)
+	 (if (region-active-p)
+	     (lsp-format-region (region-beginning) (region-end))
+	   (lsp-format-buffer)))
+       :config
+       (setq lsp-prefer-flymake nil
+	     lsp-enable-xref t
+	     lsp-enable-snippets t
+	     lsp-eldoc-render-all t
+	     lsp-enable-on-type-formatting t))
+   #+END_SRC
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package company-lsp
+       :init
+       (defun enable-local-company-lsp ()
+	 "Add company-lsp as a company-backend locally."
+	 (push 'company-lsp
+	       (make-local-variable 'company-backends)))
+       :config
+       (setq company-lsp-cache-candidates 'auto
+	     company-lsp-async t
+	     company-lsp-enable-snippet t)
+       :hook (lsp . enable-local-company-lsp))
+   #+END_SRC
