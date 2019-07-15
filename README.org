@@ -102,7 +102,7 @@
      ,#+INCLUDE: "./init.el" src emacs-lisp
    #+END_SRC
 
-* Configuration
+* General configuration
 
 ** cl-lib
 
@@ -415,37 +415,6 @@
 	   :states '(normal visual)))
    #+END_SRC
 
-** Elisp configuration
-
-   Because the indentation of =cl-flet= and such is still broken as of
-   [2018-10-14 Sun], fix their indentation.
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package lisp-mode
-       :ensure nil
-       :commands emacs-lisp-mode
-       :config
-       (setq lisp-indent-function 'common-lisp-indent-function)
-
-       (add-hook 'lisp-mode-hook #'disable-tabs)
-       (add-hook 'emacs-lisp-mode-hook #'disable-tabs))
-
-     (use-package cl-indent
-       :ensure nil
-       :commands common-lisp-indent-function
-       :config
-       (defun fix-elisp-indent (func indent)
-	 "Fix the indendation of elisp forms that
-     `common-lisp-indent-function' might have broken."
-	 (unless (and (symbolp func)
-		      (fboundp func))
-	   (error "%s: is not a function" func))
-	 (put func 'common-lisp-indent-function-for-elisp indent))
-
-       (fix-elisp-indent 'defalias 1)
-       (fix-elisp-indent 'use-package 1))
-   #+END_SRC
-
 ** hide-mode-line
 
    A package from *Doom*, which helps hiding modeline when it isn't
@@ -688,4 +657,52 @@
 	     company-lsp-async t
 	     company-lsp-enable-snippet t)
        :hook (lsp . enable-local-company-lsp))
+   #+END_SRC
+
+* Per language configuration
+
+  Here goes every language specific configuration.
+
+** Emacs Lisp configuration
+
+   Because the indentation of =cl-flet= and such is still broken as of
+   [2018-10-14 Sun], fix their indentation.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package lisp-mode
+       :ensure nil
+       :commands emacs-lisp-mode
+       :config
+       (setq lisp-indent-function 'common-lisp-indent-function)
+
+       (add-hook 'lisp-mode-hook #'disable-tabs)
+       (add-hook 'emacs-lisp-mode-hook #'disable-tabs))
+
+     (use-package cl-indent
+       :ensure nil
+       :commands common-lisp-indent-function
+       :config
+       (defun fix-elisp-indent (func indent)
+	 "Fix the indendation of elisp forms that
+     `common-lisp-indent-function' might have broken."
+	 (unless (and (symbolp func)
+		      (fboundp func))
+	   (error "%s: is not a function" func))
+	 (put func 'common-lisp-indent-function-for-elisp indent))
+
+       (fix-elisp-indent 'defalias 1)
+       (fix-elisp-indent 'use-package 1))
+   #+END_SRC
+
+** Java
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package lsp-java
+       :after lsp)
+
+     (use-package java-mode
+       :ensure nil ;; builtin
+       :commands java-mode
+       :init
+       (add-hook 'java-mode-hook #'lsp))
    #+END_SRC
