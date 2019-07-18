@@ -497,6 +497,13 @@
    #+BEGIN_SRC emacs-lisp
      (use-package helm
        :commands helm-mode
+       :general
+       (general-def
+           "M-x" 'helm-M-x)
+       (general-def :keymaps 'helm-map
+	 "TAB" 'helm-execute-persistent-action
+	 "C-i" 'helm-execute-persistent-action
+	 "C-z" 'helm-select-action)
        :init
        (setq helm-split-window-inside-p t
 	     helm-move-to-line-cycle-in-source t
