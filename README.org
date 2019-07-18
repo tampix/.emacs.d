@@ -521,6 +521,15 @@
        :after (helm))
    #+END_SRC
 
+** helm-xref
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package helm-xref
+       :config
+       (setq xref-show-xrefs-function #'helm-xref-show-xrefs
+	     helm-xref-candidate-formatting-function #'helm-xref-format-candidate-long))
+   #+END_SRC
+
 ** Projectile
 
    #+BEGIN_SRC emacs-lisp
