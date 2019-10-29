@@ -732,3 +732,13 @@
      (use-package cider
        :after clojure)
    #+END_SRC
+
+** Terraform
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package terraform-mode)
+
+     (use-package company-terraform)
+
+     (use-package terraform-doc)
+   #+END_SRC
