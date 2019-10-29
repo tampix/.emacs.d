@@ -723,3 +723,12 @@
        :init
        (add-hook 'java-mode-hook #'lsp))
    #+END_SRC
+
+** Clojure
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package clojure-mode)
+
+     (use-package cider
+       :after clojure)
+   #+END_SRC
