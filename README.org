@@ -463,12 +463,7 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package forge
-       :after (magit)
-       :config
-       ;; HACK Turn "off" TLS1.3
-       ;; See: https://github.com/magit/ghub/issues/81
-       ;; See: https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
-       (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+       :after (magit))
    #+END_SRC
 
 ** github-review
