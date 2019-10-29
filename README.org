@@ -670,6 +670,12 @@
        :hook (lsp . enable-local-company-lsp))
    #+END_SRC
 
+** Restclient
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package restclient)
+   #+END_SRC
+
 * Per language configuration
 
   Here goes every language specific configuration.
