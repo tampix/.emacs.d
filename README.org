@@ -325,7 +325,11 @@
        :hook (after-first-make-frame . load-doom-dracula))
 
      (use-package doom-modeline
-       :hook (after-init . doom-modeline-mode))
+       :config
+       (defun enable-doom-modeline-icons ()
+	 (setq doom-modeline-icon t))
+       :hook ((after-init . doom-modeline-mode)
+	      (after-first-make-frame . enable-doom-modeline-icons)))
    #+END_SRC
 
 ** Setup Evil
