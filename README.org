@@ -2,6 +2,7 @@
 
 #+TITLE: Emacs configuration file
 #+AUTHOR: Nicolas Bertrand
+#+STARTUP: showeverything
 #+BABEL: :cache yes
 #+PROPERTY: header-args :tangle yes
 
@@ -254,6 +255,7 @@
 
      (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
      (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+     (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
      (unless (package-installed-p 'use-package)
        (package-refresh-contents)
@@ -683,6 +685,18 @@
 * Per language configuration
 
   Here goes every language specific configuration.
+
+** Org
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package org
+       :pin org
+       :preface
+       ;; See `package-installed-p' implementation
+       (assq-delete-all 'org package--builtins)
+       (assq-delete-all 'org package--builtin-versions)
+       :hook (org-mode . disable-tabs))
+   #+END_SRC
 
 ** Emacs Lisp configuration
 
