@@ -469,7 +469,10 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package forge
-       :after (magit))
+       :after (magit)
+       :config
+       (setq forge-toggle-closed-visibility t)
+       (setcdr forge-topic-list-limit -5))
    #+END_SRC
 
 ** github-review
