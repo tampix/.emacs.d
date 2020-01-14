@@ -439,7 +439,7 @@
    which was powerful in it's own right).
 
    It's become even more awesome as time went by, and really thank
-   it's contributors (and especially [[https://github.com/tarsius][tarsius]] who deserves all the
+   it's contributors, and especially [[https://github.com/tarsius][tarsius]], who deserves all the
    praise he got, without any shadow of a doubt, for what is the best
    *Git* porcelain out there.
 
@@ -688,6 +688,13 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package restclient)
+   #+END_SRC
+
+** Rainbow delimiters
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-delimiters
+       :hook (prog-mode . rainbow-delimiters-mode))
    #+END_SRC
 
 * Per language configuration
