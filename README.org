@@ -697,6 +697,12 @@
        :hook (prog-mode . rainbow-delimiters-mode))
    #+END_SRC
 
+** highlight-defined
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package highlight-defined)
+   #+END_SRC
+
 * Per language configuration
 
   Here goes every language specific configuration.
@@ -725,9 +731,9 @@
        :commands emacs-lisp-mode
        :config
        (setq lisp-indent-function 'common-lisp-indent-function)
-
-       (add-hook 'lisp-mode-hook #'disable-tabs)
-       (add-hook 'emacs-lisp-mode-hook #'disable-tabs))
+       :hook ((lisp-mode . disable-tabs)
+              (emacs-lisp-mode . disable-tabs)
+              (eamcs-lisp-mode . highlight-defined)))
 
      (use-package cl-indent
        :ensure nil
