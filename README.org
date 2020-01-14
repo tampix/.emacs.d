@@ -421,6 +421,20 @@
            :states '(normal visual)))
    #+END_SRC
 
+** Winner
+
+   Use winner, mostly for *winner-undo*.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package winner
+       :ensure nil
+       :init
+       (winner-mode 1)
+       :config
+       (nmap :prefix "C-w"
+             "u" 'winner-undo))
+   #+END_SRC
+
 ** hide-mode-line
 
    A package from *Doom*, which helps hiding modeline when it isn't
