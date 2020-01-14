@@ -710,7 +710,8 @@
        ;; See `package-installed-p' implementation
        (assq-delete-all 'org package--builtins)
        (assq-delete-all 'org package--builtin-versions)
-       :hook (org-mode . disable-tabs))
+       :hook ((org-mode . disable-tabs)
+              (org-mode . yas-minor-mode)))
    #+END_SRC
 
 ** Emacs Lisp configuration
