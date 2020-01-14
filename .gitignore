@@ -1,2 +1,15 @@
 *.elc
 *.bak
+/elpa/
+/forge-database.sqlite
+/games/
+/projectile-bookmarks.eld
+/projectile.cache
+/recentf
+/request/
+/transient/
+/url/
+/workspace/
+/.lsp-session-v1
+/auto-save-list/
+/eclipse.jdt.ls/
