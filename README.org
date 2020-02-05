@@ -784,7 +784,8 @@
      (use-package clojure-mode)
 
      (use-package cider
-       :after clojure)
+       :after clojure
+       :hook (cider-mode . cider-enlighten-mode))
    #+END_SRC
 
 ** Terraform
