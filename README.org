@@ -362,6 +362,14 @@
              evil-want-C-w-in-emacs-state t
              evil-search-module 'evil-search
              evil-default-cursor t)
+       :config
+       (evil-define-text-object defun-text-object (count &optional beg end type)
+         (save-excursion
+           (mark-defun)
+           (evil-range (region-beginning)
+                       (region-end)
+                       type
+                       :expanded t)))
        :hook (after-init . evil-mode))
    #+END_SRC
 
@@ -418,7 +426,9 @@
            :prefix my--prefix
            :prefix-command 'my--prefix-command
            :prefix-map 'my--prefix-map
-           :states '(normal visual)))
+           :states '(normal visual))
+
+       (tomap "m" #'defun-text-object))
    #+END_SRC
 
 ** Winner
