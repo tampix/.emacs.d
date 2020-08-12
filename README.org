@@ -129,6 +129,20 @@
         (add-hook 'after-init-hook #'reset-gc-config)))
    #+END_SRC
 
+   Add a macro to inhibit GC.
+
+   #+BEGIN_SRC emacs-lisp
+     (defmacro inhibit-gc (&rest body)
+       "Inhibit gc around BODY by setting `gc-cons-threshold' to
+     `most-positive-fixnum'.
+
+     \(fn BODY...)"
+       (declare (indent 0)
+                (debug t))
+       `(let ((gc-cons-threshold most-positive-fixnum))
+          ,@body))
+   #+END_SRC
+
 ** Setup defaults
 
    Setup some default values.
@@ -309,29 +323,116 @@
      (add-hook 'after-init-hook #'run-after-first-make-frame-hooks)
    #+END_SRC
 
-   Setup theme and modeline and related packages.
+   Inspired by Doom Emacs, introduce a variable *my--theme* that is
+   used to determine the default theme at startup.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package solaire-mode
-       :config
-       (solaire-global-mode +1)
-       :hook
-       ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-       (minibuffer-setup . solaire-mode-in-minibuffer))
+     (defvar my--theme nil
+       "Theme selected in the configuration.")
 
+     (defun my--load-theme (&optional frame)
+       "Load theme configured in `my--theme'.in FRAME."
+       (if my--theme
+           ;; don't load `my--theme' if it's already loaded
+           (when (not (memq my--theme custom-enabled-themes))
+             (with-selected-frame (or frame (selected-frame))
+               (load-theme my--theme :no-confirm)))
+         (error "`my-theme' shouldn't be nil")))
+
+     (add-hook 'after-first-make-frame-hook #'my--load-theme)
+
+     (defun my--reload-theme ()
+       "Reload `my--theme'."
+       (interactive)
+       (my--load-theme))
+   #+END_SRC
+
+   Also inspired by Doom Emacs, add a hook on *load-theme* and ensure
+   themes are loaded without any cluttering from previous themes.
+
+   #+BEGIN_SRC emacs-lisp
+     (defvar my--load-theme-hook nil
+       "Hooks to run after `load-theme'.")
+
+     (defun load-theme--after (theme &optional _ no-enable)
+       "When `load-theme' is called, disable previous themes and run
+     `my-load-theme-hook'."
+       (unless no-enable
+         (setq my--theme theme)
+         (mapc #'disable-theme (remq theme custom-enabled-themes))
+         (run-hooks 'my--load-theme-hook)))
+
+     (advice-add 'load-theme :after #'load-theme--after)
+   #+END_SRC
+
+   Setup theme.
+
+   #+BEGIN_SRC emacs-lisp
      (use-package doom-themes
        :init
-       (defun load-doom-dracula ()
-         (load-theme 'doom-dracula :no-confirm)
-         (solaire-mode-swap-bg))
-       :hook (after-first-make-frame . load-doom-dracula))
+       (setq my--theme 'doom-challenger-deep))
+   #+END_SRC
 
+   Setup modeline.
+
+   #+BEGIN_SRC emacs-lisp
      (use-package doom-modeline
        :config
        (defun enable-doom-modeline-icons ()
          (setq doom-modeline-icon t))
+       (defun set-doom-modeline-height ()
+         (setq doom-modeline-height (* 2 (doom-modeline--font-height))))
        :hook ((after-init . doom-modeline-mode)
-              (after-first-make-frame . enable-doom-modeline-icons)))
+              (after-first-make-frame . enable-doom-modeline-icons)
+              (after-first-make-frame . set-doom-modeline-height)))
+   #+END_SRC
+
+   Setup solaire-mode. Ensure it's only enabled when in the GUI. To do
+   so, introduce a *after-switch-frame-hook* to handle going back and
+   forth GUI and term emacsclients, inspired by Doom Emacs again.
+
+   #+BEGIN_SRC emacs-lisp
+     (defvar after-switch-frame-hook nil
+       "Hooks to run after <switch-frame>.")
+
+     (let ((last-frame nil)
+           (entered nil)) ; make it non-reentrant
+       (defun my--switch-frame--run-hooks (&rest _)
+         (unless (or entered
+                     (eq last-frame (selected-frame)))
+           (inhibit-gc
+             (setq entered t)
+             (run-hooks 'after-switch-frame-hook)
+             (setq entered nil)
+             (setq last-frame (selected-frame))))))
+
+     (defun my--register-switch-frame--run-hooks ()
+       (advice-add 'after-focus-change-function
+                   :after #' my--switch-frame--run-hooks))
+
+     (add-hook 'window-setup #'my--register-switch-frame--run-hooks)
+
+     (use-package solaire-mode
+       :when (or (daemonp) (display-graphic-p))
+       :config
+       (defun solaire-mode-swap-bg-on-doom-themes ()
+         (when (and solaire-global-mode
+                    (string-prefix-p "doom-" (symbol-name my--theme)))
+           (solaire-mode-swap-bg)))
+
+       (add-hook 'solaire-global-mode-hook #'solaire-mode-swap-bg-on-doom-themes)
+
+       (when (daemonp)
+         (defun maybe-toggle-solaire-global-mode (&optional frame)
+           (if (display-graphic-p frame)
+               (unless solaire-global-mode
+                 (solaire-global-mode +1))
+             (when solaire-global-mode
+               (solaire-global-mode -1))))
+         (add-hook 'after-switch-frame-hook #'maybe-toggle-solaire-global-mode)
+         (add-hook 'after-make-frame-functions #'maybe-toggle-solaire-global-mode))
+       :hook
+       (my--load-theme . solaire-global-mode))
    #+END_SRC
 
 ** Setup Evil
@@ -614,7 +715,7 @@
      (use-package all-the-icons
        :config
        (defun my--all-the-icons-setup ()
-         (if (window-system)
+         (if (display-graphic-p)
              (when (not (member "all-the-icons" (font-family-list)))
                (all-the-icons-install-fonts t))))
        :hook (before-make-frame . my--all-the-icons-setup))
