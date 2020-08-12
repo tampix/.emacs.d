@@ -311,10 +311,10 @@
      (defun run-after-first-make-frame-hooks ()
        "Run hooks in `after-first-make-frame-hook'."
        (if (daemonp)
-           (cl-flet ((my--run-once (&optional frame)
-                       (with-selected-frame (or frame (selected-frame))
-                         (run-hooks 'after-first-make-frame-hook))
-                       (remove-hook 'after-make-frame-functions #'my--run-once)))
+           (cl-labels ((my--run-once (&optional frame)
+                         (with-selected-frame (or frame (selected-frame))
+                           (run-hooks 'after-first-make-frame-hook))
+                         (remove-hook 'after-make-frame-functions #'my--run-once)))
              (add-hook 'after-make-frame-functions #'my--run-once))
          ;; not a daemon, run hooks in the `after-init-hook'
          (run-hooks 'after-first-make-frame-hook)))
