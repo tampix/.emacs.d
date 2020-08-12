@@ -13,3 +13,6 @@
 /.lsp-session-v1
 /auto-save-list/
 /eclipse.jdt.ls/
+/.cache/
+/.dap-breakpoints
+/eshell/
