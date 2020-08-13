@@ -116,17 +116,11 @@
 
 ** Garbage collector
 
-   Configure GC so it doesn't run during the init.
+   Configure GC so it doesn't run during the init. This will be
+   handled later in the init by GCMH.
 
    #+BEGIN_SRC emacs-lisp
-    (let ((default-threshold gc-cons-threshold)
-          (default-percentage gc-cons-percentage))
-      (setq gc-cons-threshold (* 1000 default-threshold)
-            gc-cons-percentage 0.75)
-      (cl-flet ((reset-gc-config ()
-                  (setq gc-cons-threshold default-threshold
-                        gc-cons-percentage default-percentage)))
-        (add-hook 'after-init-hook #'reset-gc-config)))
+     (setq gc-cons-threshold most-positive-fixnum)
    #+END_SRC
 
    Add a macro to inhibit GC.
@@ -277,6 +271,14 @@
      (setq use-package-always-ensure t)
 
      (require 'use-package)
+   #+END_SRC
+
+** GCMH
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package gcmh
+       :hook
+       (after-init . gcmh-mode))
    #+END_SRC
 
 ** esup
