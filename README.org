@@ -98,11 +98,6 @@
     (setq safe-local-variable-values '((eval tangle-init-org-file-after-save)))
   #+END_SRC
 
-** TODO I can't make that work in README.org in GitHub...
-   #+BEGIN_SRC org :tangle no
-     ,#+INCLUDE: "./init.el" src emacs-lisp
-   #+END_SRC
-
 * General configuration
 
 ** cl-lib
