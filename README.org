@@ -226,18 +226,12 @@
        (setq indent-tabs-mode nil))
    #+END_SRC
 
-** Setup package.el and use-package
+** Setup use-package
 
-   For now, initialize package.el normally. It might be interesting in
-   the future to consider doing what *Doom* or [[https://github.com/nilcons/emacs-use-package-fast/blob/master/errge-dot-emacs.el][emacs-use-package-fast]]
-   implements and avoid the call to =package-initialize=.
+   Automatically install *use-package* if it's not installed.
 
    #+BEGIN_SRC emacs-lisp
-     ;; Avoid init.el pollution...
-     (setq package--init-file-ensured t)
-
      (require 'package)
-     (package-initialize)
 
      (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
      (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
@@ -246,9 +240,11 @@
        (package-refresh-contents)
        (package-install 'use-package))
 
-     (setq use-package-always-ensure t)
-
      (require 'use-package)
+
+     (use-package use-package
+       :ensure nil ; useless, just here to be consistent
+       :custom (use-package-always-ensure t))
    #+END_SRC
 
 ** GCMH
