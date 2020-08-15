@@ -779,13 +779,22 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package lsp-java
-       :after lsp)
-
-     (use-package java-mode
-       :ensure nil ;; builtin
-       :commands java-mode
-       :init
-       (add-hook 'java-mode-hook #'lsp))
+       :after lsp-mode
+       :config
+       (setq lsp-java-java-path "/usr/lib/jvm/java-11-openjdk/bin/java"
+             lsp-java-vmargs '("-server"
+                               "-noverify"
+                               "-Xms2G"
+                               "-Xmx2G"
+                               "-XX:+UseG1GC"
+                               "-XX:+UseStringDeduplication"
+                               "-XX:MaxGCPauseMillis=150"
+                               "-XX:+AlwaysPreTouch"
+                               "-XX:TargetSurvivorRatio=80")
+             lsp-java-format-on-type-enabled t
+             lsp-java-code-generation-hash-code-equals-use-java7objects t
+             lsp-java-code-generation-use-blocks t)
+       :hook (java-mode . lsp))
    #+END_SRC
 
 ** Clojure
