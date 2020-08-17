@@ -360,52 +360,12 @@
               (after-first-make-frame . set-doom-modeline-height)))
    #+END_SRC
 
-   Setup solaire-mode. Ensure it's only enabled when in the GUI. To do
-   so, introduce a *after-switch-frame-hook* to handle going back and
-   forth GUI and term emacsclients, inspired by Doom Emacs again.
+   Setup solaire-mode.
 
    #+BEGIN_SRC emacs-lisp
-     (defvar after-switch-frame-hook nil
-       "Hooks to run after <switch-frame>.")
-
-     (let ((last-frame nil)
-           (entered nil)) ; make it non-reentrant
-       (defun my--switch-frame--run-hooks (&rest _)
-         (unless (or entered
-                     (eq last-frame (selected-frame)))
-           (inhibit-gc
-             (setq entered t)
-             (run-hooks 'after-switch-frame-hook)
-             (setq entered nil)
-             (setq last-frame (selected-frame))))))
-
-     (defun my--register-switch-frame--run-hooks ()
-       (advice-add 'after-focus-change-function
-                   :after #' my--switch-frame--run-hooks))
-
-     (add-hook 'window-setup #'my--register-switch-frame--run-hooks)
-
      (use-package solaire-mode
        :when (or (daemonp) (display-graphic-p))
-       :config
-       (defun solaire-mode-swap-bg-on-doom-themes ()
-         (when (and solaire-global-mode
-                    (string-prefix-p "doom-" (symbol-name my--theme)))
-           (solaire-mode-swap-bg)))
-
-       (add-hook 'solaire-global-mode-hook #'solaire-mode-swap-bg-on-doom-themes)
-
-       (when (daemonp)
-         (defun maybe-toggle-solaire-global-mode (&optional frame)
-           (if (display-graphic-p frame)
-               (unless solaire-global-mode
-                 (solaire-global-mode +1))
-             (when solaire-global-mode
-               (solaire-global-mode -1))))
-         (add-hook 'after-switch-frame-hook #'maybe-toggle-solaire-global-mode)
-         (add-hook 'after-make-frame-functions #'maybe-toggle-solaire-global-mode))
-       :hook
-       (my--load-theme . solaire-global-mode))
+       :hook (after-first-make-frame . solaire-global-mode))
    #+END_SRC
 
 ** Setup Evil
