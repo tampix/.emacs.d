@@ -79,6 +79,8 @@
 
   #+NAME: init
   #+BEGIN_SRC emacs-lisp
+    (require 'subr-x)
+
     (defun in-emacs-dir (file)
       "Return the absolute path to FILE in `user-emacs-directory'."
       (file-truename (expand-file-name file user-emacs-directory)))
