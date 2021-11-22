@@ -236,7 +236,6 @@
      (require 'package)
 
      (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-     (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
 
      (unless (package-installed-p 'use-package)
        (package-refresh-contents)
@@ -771,7 +770,6 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package org
-       :pin org
        :preface
        ;; See `package-installed-p' implementation
        (assq-delete-all 'org package--builtins)
