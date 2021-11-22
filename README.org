@@ -358,7 +358,8 @@
          (setq doom-modeline-height (* 2 (doom-modeline--font-height))))
        :hook ((after-first-make-frame . doom-modeline-mode)
               (after-first-make-frame . enable-doom-modeline-icons)
-              (after-first-make-frame . set-doom-modeline-height)))
+              (after-first-make-frame . set-doom-modeline-height)
+              (after-first-make-frame . column-number-mode)))
    #+END_SRC
 
    Setup solaire-mode.
