@@ -670,7 +670,7 @@
          "C-p" 'company-select-previous)
        :config
        (setq company-tooltip-align-annotations t
-             company-show-numbers t)
+             company-show-quick-access t)
        :hook (after-init . global-company-mode))
    #+END_SRC
 
@@ -689,9 +689,8 @@
 
 ** lsp
 
-   Setup *lsp-mode* and *company-lsp*. Don't setup *lsp-ui* for now as
-   it's very cumbersome (disable sideline, doc, company-quickhelp
-   override...)
+   Setup *lsp-mode*. Don't setup *lsp-ui* for now as it's very
+   cumbersome (disable sideline, doc, company-quickhelp override...)
 
    #+BEGIN_SRC emacs-lisp
      (use-package lsp-mode
@@ -728,20 +727,6 @@
              lsp-enable-snippets t
              lsp-eldoc-render-all t
              lsp-enable-on-type-formatting t))
-   #+END_SRC
-
-   #+BEGIN_SRC emacs-lisp
-     (use-package company-lsp
-       :init
-       (defun enable-local-company-lsp ()
-         "Add company-lsp as a company-backend locally."
-         (push 'company-lsp
-               (make-local-variable 'company-backends)))
-       :config
-       (setq company-lsp-cache-candidates 'auto
-             company-lsp-async t
-             company-lsp-enable-snippet t)
-       :hook (lsp . enable-local-company-lsp))
    #+END_SRC
 
 ** Restclient
