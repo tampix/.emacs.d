@@ -535,15 +535,13 @@
        (setcdr forge-topic-list-limit -5))
    #+END_SRC
 
-** github-review
+** code-review
 
    Do GitHub Pull Request reviews from Emacs.
 
    #+BEGIN_SRC emacs-lisp
-     (use-package github-review
-       :after forge
-       :commands (github-review-start
-                  github-review-forge-pr-at-point))
+     (use-package code-review
+       :after forge)
    #+END_SRC
 
 ** git-timemachine
