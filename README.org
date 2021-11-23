@@ -248,6 +248,53 @@
        :custom (use-package-always-ensure t))
    #+END_SRC
 
+** Guix support
+
+   Instead of using org + babel to handle guix packages, directly
+   handle it with a =use-package= extension.
+
+   #+BEGIN_SRC emacs-lisp
+     (defgroup use-package-guix nil
+       "A `use-package' extension for guix."
+       :group 'use-package)
+
+     (defcustom use-package-guix-manifest-path
+       "~/.config/guix/manifests/"
+       "The path where the manifest file will be stored. "
+       :type  'string
+       :group 'use-package-guix)
+
+     (defcustom use-package-guix-profile
+       "emacs"
+       "The profile used to install guix packages.
+
+     The generated manifest will also use this for it's basename."
+       :type  'string
+       :group 'use-package-guix)
+
+     (defcustom use-package-guix-emacs-package
+       "emacs"
+       "The guix package name of emacs itself."
+       :type  'string
+       :group 'use-package-guix)
+
+     ;(eval-when-compile
+     ;  (defun insert-elt-after (haystack needle elt)
+     ;    "Return a new list based on `haystack', with `elt' inserted
+     ;after `needle'."
+     ;    (cl-loop for item in haystack
+     ;       if (eq item needle)
+     ;       collect needle and collect elt
+     ;       else
+     ;       unless (eq item elt)
+     ;       collect item))
+     ;
+     ;  (setq use-package-keywords (insert-elt-after use-package-keywords :unless :guix))
+     ;
+     ;  (memq :guix use-package-keywords)
+     ;  )
+   #+END_SRC
+
 ** GCMH
 
    #+BEGIN_SRC emacs-lisp
