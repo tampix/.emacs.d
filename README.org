@@ -230,7 +230,7 @@
 
 ** Setup use-package
 
-   Automatically install *use-package* if it's not installed.
+   Automatically install =use-package= if it's not installed.
 
    #+BEGIN_SRC emacs-lisp
      (require 'package)
