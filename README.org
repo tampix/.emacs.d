@@ -236,6 +236,7 @@
    #+BEGIN_SRC emacs-lisp
      (require 'package)
 
+     (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu") t)
      (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
      (unless (package-installed-p 'use-package)
@@ -761,6 +762,18 @@
        (assq-delete-all 'org package--builtin-versions)
        :hook ((org-mode . disable-tabs)
               (org-mode . yas-minor-mode)))
+
+     (use-package htmlize
+       :after org
+       :config
+       (setq htmlize-output-type 'inline-css))
+
+     (use-package org-re-reveal
+       :after org
+       :config
+       (setq org-re-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js"
+             org-re-reveal-revealjs-version "4"
+             org-re-reveal-theme "solarized"))
    #+END_SRC
 
 ** Emacs Lisp configuration
