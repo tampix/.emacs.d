@@ -738,6 +738,26 @@
        :hook (company-mode . company-box-mode))
    #+END_SRC
 
+** tree-sitter
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package tree-sitter
+       :hook (after-init . global-tree-sitter-mode))
+
+     (use-package tree-sitter-langs
+       :after tree-sitter)
+
+     (use-package evil-textobj-tree-sitter
+       :after (evil tree-sitter)
+       :general
+       (:keymaps 'evil-outer-text-objects-map
+                 "f" (evil-textobj-tree-sitter-get-textobj "function.outer")
+                 "a" (evil-textobj-tree-sitter-get-textobj ("conditional.outer" "loop.outer")))
+       (:keymaps 'evil-inner-text-objects-map
+                 "f" (evil-textobj-tree-sitter-get-textobj "function.inner")
+                 "a" (evil-textobj-tree-sitter-get-textobj ("conditional.inner" "loop.inner"))))
+   #+END_SRC
+
 ** lsp
 
    Setup *lsp-mode*. Don't setup *lsp-ui* for now as it's very
