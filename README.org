@@ -431,6 +431,7 @@
              evil-want-C-i-jump t
              evil-want-C-w-in-emacs-state t
              evil-search-module 'evil-search
+             evil-undo-system 'undo-fu
              evil-default-cursor t)
        :config
        (evil-define-text-object defun-text-object (count &optional beg end type)
@@ -441,6 +442,24 @@
                        type
                        :expanded t)))
        :hook (after-init . evil-mode))
+   #+END_SRC
+
+** Undo configuration
+
+*** TODO Try out Vundo
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package undo-fu
+       :after evil
+       :config
+       ;; values taken from Doom
+       (setq undo-limit 400000
+             undo-strong-limit 3000000
+             undo-outer-limit 3000000))
+
+     (use-package undo-fu-session
+       :after undo-fu
+       :hook (prog-mode . undo-fu-session-mode))
    #+END_SRC
 
 ** which-key
