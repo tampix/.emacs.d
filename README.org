@@ -961,3 +961,9 @@
                nxml-slash-auto-complete-flag t))
        :hook (nxml-mode . my--nxml-indent-tabs-mode))
    #+END_SRC
+
+** Haskell
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package haskell-mode)
+   #+END_SRC
