@@ -829,6 +829,14 @@
      (use-package highlight-defined)
    #+END_SRC
 
+** align
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package align
+       :ensure nil
+       :custom (align-to-tab-stop nil))
+   #+END_SRC
+
 * Per language configuration
 
   Here goes every language specific configuration.
