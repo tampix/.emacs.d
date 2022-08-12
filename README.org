@@ -813,6 +813,16 @@
        :hook (prog-mode . rainbow-delimiters-mode))
    #+END_SRC
 
+** rainbow-mode
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package rainbow-mode
+       :hook ((config-mode . rainbow-mode)
+              (css-mode . rainbow-mode)
+              (emacs-lisp-mode . rainbow-mode)
+              (org-mode . rainbow-mode)))
+   #+END_SRC
+
 ** highlight-defined
 
    #+BEGIN_SRC emacs-lisp
