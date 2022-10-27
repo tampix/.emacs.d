@@ -530,8 +530,10 @@
        :init
        (winner-mode 1)
        :config
-       (nmap :prefix "C-w"
-             "u" 'winner-undo))
+       (general-define-key
+        :states '(normal emacs)
+        :prefix "C-w"
+        "u" 'winner-undo))
    #+END_SRC
 
 ** hide-mode-line
