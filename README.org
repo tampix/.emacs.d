@@ -546,6 +546,18 @@
        :commands hide-mode-line-mode)
    #+END_SRC
 
+** savehist
+
+   Enabled savehist-mode to keep minibuffer history.
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package savehist
+       :ensure nil
+       :init
+       (setq history-length 100)
+       :hook (after-init . savehist-mode))
+   #+END_SRC
+
 ** Magit
 
    *Magit* was what, along with *Evil*, sold me Emacs at first. I
