@@ -149,7 +149,7 @@
           (load-file tangled))
         (if no-compile
             tangled
-          (byte-compile-file tangled t)
+          (byte-compile-file tangled)
           (rename-file (byte-compile-dest-file tangled)
                        "init.elc"
                        :ok-if-already-exists)

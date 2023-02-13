@@ -36,7 +36,7 @@ is nil or `debug-on-error' is not-nil, else return nil."
       (load-file tangled))
     (if no-compile
         tangled
-      (byte-compile-file tangled t)
+      (byte-compile-file tangled)
       (rename-file (byte-compile-dest-file tangled)
                    "init.elc"
                    :ok-if-already-exists)
