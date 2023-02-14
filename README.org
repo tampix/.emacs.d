@@ -885,10 +885,12 @@
 
    #+BEGIN_SRC emacs-lisp
      (use-package org
-       :preface
-       ;; See `package-installed-p' implementation
-       (assq-delete-all 'org package--builtins)
-       (assq-delete-all 'org package--builtin-versions)
+       ;; TODO Fix config for org-version greater than 9.6
+       :ensure nil
+       ;; :preface
+       ;; ;; See `package-installed-p' implementation
+       ;; (assq-delete-all 'org package--builtins)
+       ;; (assq-delete-all 'org package--builtin-versions)
        :hook ((org-mode . disable-tabs)
               (org-mode . yas-minor-mode)))
 
