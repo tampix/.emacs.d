@@ -38,7 +38,7 @@ is nil or `debug-on-error' is not-nil, else return nil."
         tangled
       (byte-compile-file tangled)
       (rename-file (byte-compile-dest-file tangled)
-                   "init.elc"
+                   (in-emacs-dir "init.elc")
                    :ok-if-already-exists)
       (setq tangle-init-org-file--first-time nil)
       ;; Keep the init file for debug purposes.
