@@ -251,6 +251,12 @@
 
    #+BEGIN_SRC emacs-lisp
      (setq vc-handled-backends nil)
+
+     (defmacro use-package-with-vc (name &rest args)
+       "use-package with temporary VC support."
+       (declare (indent defun))
+       `(let ((vc-handled-backends '(RCS CVS SVN SCCS SRC Bzr Git Hg)))
+          (use-package ,name ,@args)))
    #+END_SRC
 
 ** TODO Stuff I should move to different files
@@ -621,6 +627,25 @@
 
 *** TODO fix binding conflicts with evil
 
+** EAT
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package eat
+        :hook (eat-mode . evil-emacs-state))
+    #+END_SRC
+
+
+** Claude Code
+
+    #+BEGIN_SRC emacs-lisp
+      (use-package-with-vc claude-code
+        :vc (:url "https://github.com/stevemolitor/claude-code.el" :rev :newest)
+        :general
+        (prefix-nmap
+            "c" '(:keymap claude-code-command-map :which-key "Claude Code"))
+        :config (claude-code-mode))
+    #+END_SRC
+
 ** Vertico
 
    #+BEGIN_SRC emacs-lisp
@@ -988,7 +1013,7 @@
        :after cider
        :general
        (prefix-nmap
-           "c" '(hydra-cljr-help-menu/body :which-key "Clojure Refactor"))
+           "C" '(hydra-cljr-help-menu/body :which-key "Clojure Refactor"))
        :hook (clojure-mode . clj-refactor-mode))
    #+END_SRC
 
