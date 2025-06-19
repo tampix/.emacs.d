@@ -710,6 +710,20 @@
        :after (vertico)
        :init
        (marginalia-mode))
+
+     (use-package embark
+       :general
+       ("C-." 'embark-act)
+       (:keymaps 'minibuffer-local-map
+        "C-c C-e" 'embark-export))
+
+     (use-package embark-consult
+       :after (embark consult))
+
+     (use-package wgrep
+       :custom
+       (wgrep-auto-save-buffer t)
+       (wgrep-change-readonly-file t))
    #+END_SRC
 
 ** Projectile
