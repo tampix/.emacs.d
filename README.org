@@ -1143,3 +1143,9 @@
    #+BEGIN_SRC emacs-lisp
      (use-package haskell-mode)
    #+END_SRC
+
+** Pkl
+
+   #+BEGIN_SRC emacs-lisp
+     (use-package pkl-mode)
+   #+END_SRC
